@@ -18,6 +18,6 @@ func (g *Gossip) Connect() {
 	myAddrs := whoAmI()
 	_ = myAddrs
 	for _, host := range g.Hosts {
-		_ = host
+		connectHost(host)
 	}
 }
