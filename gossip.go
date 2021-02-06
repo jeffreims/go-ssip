@@ -1,8 +1,9 @@
 package gossip
 
 type host struct {
-	Addr string
-	Port int
+	Addr        string
+	Port        int
+	Write, Read chan []byte
 }
 
 type Gossip struct {
@@ -11,7 +12,9 @@ type Gossip struct {
 }
 
 func (g *Gossip) AddHost(addr string, port int) {
-	g.Hosts = append(g.Hosts, host{Addr: addr, Port: port})
+	var w = make(chan []byte)
+	var r = make(chan []byte)
+	g.Hosts = append(g.Hosts, host{Addr: addr, Port: port, Write: w, Read: r})
 }
 
 func (g *Gossip) Connect() {

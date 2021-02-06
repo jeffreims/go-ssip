@@ -3,7 +3,6 @@ package gossip
 import (
 	"fmt"
 	"net"
-	"time"
 )
 
 func connectHost(h host) {
@@ -17,6 +16,13 @@ func connectHost(h host) {
 
 		defer conn.Close()
 
+		go func() {
+			for {
+				data := <-h.Write
+				conn.Write(data)
+			}
+		}()
+
 		data := make([]byte, 1024)
 
 		for {
@@ -24,7 +30,7 @@ func connectHost(h host) {
 			if err != nil {
 				break
 			}
-			time.Sleep(5 * time.Second)
+			h.Read <- data
 		}
 	}
 }
